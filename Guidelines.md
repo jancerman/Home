@@ -1,4 +1,6 @@
-# Guidelines for the Delivery API
+# Guidelines for the Delivery API TODO
+
++ kratke intro o tom, co sa na tejto page nachadza, dovody za tym.
 
 ## API Limitations
 
@@ -87,32 +89,32 @@ Retry policy: Only errors with codes 0 and 2 is sensible to retry. -> explain fu
 
 ### General errors
 
-0: "Unknown internal server error. Please contact our support."
-1: "No HTTP resource was found that matches the request. Please read API documentation at https://developer.kenticocloud.com ."
-2: null // only error code is used, the rest is filled from the HttpException itself
-3: "Missing or invalid access token. Please include the valid access token value in the Authorization header field as an HTTP bearer authorization scheme."
-4: "Access token does not provide the permissions required for the project."
+0: "Unknown internal server error. Please contact our support."<br>
+1: "No HTTP resource was found that matches the request. Please read API documentation at https://developer.kenticocloud.com ."<br>
+2: null // only error code is used, the rest is filled from the HttpException itself<br>
+3: "Missing or invalid access token. Please include the valid access token value in the Authorization header field as an HTTP bearer authorization scheme."<br>
+4: "Access token does not provide the permissions required for the project."<br>
 
 ### Controller errors
 
-100: "The requested content item '{0}' was not found."
-101: "The requested content type '{0}' was not found."
-102: "The requested content element '{0}' was not found in content type '{1}'."
-104: "The requested taxonomy group '{0}' was not found."
+100: "The requested content item '{0}' was not found."<br>
+101: "The requested content type '{0}' was not found."<br>
+102: "The requested content element '{0}' was not found in content type '{1}'."<br>
+104: "The requested taxonomy group '{0}' was not found."<br>
 
 ### Query parser errors
 
-1000: "The RANGE operator expects two parameters. {0} provided."
-1001: "Parameter 'elements' has to contain only names of elements, not its fields. Incorrect parameter name was '{0}'."
-1002: "Operator '{0}' was not recognized as a valid operator."
-1003: "Query parameter '{0}' must be specified only once."
-1004: "Parameter '{0}' is a reserved parameter and we didn't recognize the syntax. If you meant to access the element called '{0}', you need to prefix it with 'elements.'."
-1005: "Query parameter '{0}' must be a positive integer."
-1006: "Query parameter '{0}' must be a positive integer number or zero."
-1007: "You tried to use '{0}' in order parameter. The only valid values are 'ASC' and 'DESC'."
-1008: "It is not allowed to order by '{0}'. You can order by system properties or elements only. Elements must be prefixed with 'elements.'."
-1009: "Ordering by multiple parameters is not allowed."
-1010: "Query parameter '{0}' must have a value between {1} and {2}."
+1000: "The RANGE operator expects two parameters. {0} provided."<br>
+1001: "Parameter 'elements' has to contain only names of elements, not its fields. Incorrect parameter name was '{0}'."<br>
+1002: "Operator '{0}' was not recognized as a valid operator."<br>
+1003: "Query parameter '{0}' must be specified only once."<br>
+1004: "Parameter '{0}' is a reserved parameter and we didn't recognize the syntax. If you meant to access the element called '{0}', you need to prefix it with 'elements.'."<br>
+1005: "Query parameter '{0}' must be a positive integer."<br>
+1006: "Query parameter '{0}' must be a positive integer number or zero."<br>
+1007: "You tried to use '{0}' in order parameter. The only valid values are 'ASC' and 'DESC'."<br>
+1008: "It is not allowed to order by '{0}'. You can order by system properties or elements only. Elements must be prefixed with 'elements.'."<br>
+1009: "Ordering by multiple parameters is not allowed."<br>
+1010: "Query parameter '{0}' must have a value between {1} and {2}."<br>
 
 
 ## Returned data
@@ -247,3 +249,102 @@ We differentiate between the correct query which doesn't bring any results and r
 Empty responses when querying non-existent data -> GET all /items , GET all /types, GET all /taxonomies endpoints.
 
 
+## HTTP headers
+
+### Request headers
+
+Authorization - authorization of Secured Delivery API
+* X-KC-Wait-For-Loading-New-Content - used usually when fetching fresh content based on a webhook call
+* X-KC-SDKID - used internally/automatically for SDK version tracking
+
+Webhooks - we add these to every webhook call:
+* X-KC-Message-Id
+* X-KC-Message-Type
+* X-KC-Message-Operation
+* X-KC-Message-Api-Name
+* X-KC-Message-Project-Id
+* X-KC-Message-Webhook-Url
+* X-KC-Message-Created-Timestamp
+
+### Response headers
+
+The response headers are mostly standard or not really useful for the customer (the exception may be X-Cache and X-Cache-Hits).
+
+**Standard**
+* Accept-Ranges
+* Access-Control-Allow-Origin
+* Age
+* Connection
+* Content-Encoding
+* Content-Length
+* Content-Type
+* Date
+* Expires
+* Pragma
+* Request-Context
+* Server
+* Vary
+* Via
+
+**Proprietary**
+* X-AspNet-Version
+* X-Cache - possible values: MISS, HIT - indicates if the response comes from Fastly cache
+* X-Cache-Hits - integer - indicates how many times the response came from Fastly cache so far
+* X-Powered-By
+* X-Served-By
+* X-Timer
+
+
+## Expected functionality
+
++ Use our feature matrix as a lead -> to explain what should be covered by the SDK. f.e. https://developer.kenticocloud.com/docs/net
+
+### List of required endpoints:
+
+GET List content items https://deliver.kenticocloud.com/project_id/items
+GET View a content item https://deliver.kenticocloud.com/project_id/items/content_item_codename
+GET List content types https://deliver.kenticocloud.com/project_id/types
+GET View a content type https://deliver.kenticocloud.com/project_id/types/content_type_codename
+GET View a content type element https://deliver.kenticocloud.com/project_id/types/content_type_codename/elements/element_codename
+GET List taxonomy groups https://deliver.kenticocloud.com/project_id/taxonomies
+GET View a taxonomy group https://deliver.kenticocloud.com/project_id/taxonomies/taxonomy_group_codename
+
+### Strong vs. weak typing
+
+If supported by a given stack, prefer strong typing (community can implement untyped support, if required)
+If implemented, untyped methods should return raw data (=> should not modify content...e.g. don't resolve links)
+
++  suggestions how to use ExternalID with upsert to allow repeatable imports  
++ continuationToken usage
++ non-updatable props (Codename, LastModified, ExternalID, Item.Type, Variant.Language...) - updates are not leading to error but values are simply ignored
++ RichText forma
+
+
+## Naming conventions
+
+**Namespaces**
+
+Main namespace: Kentico Cloud
+
+Sub namespace: Name of the endpoint (e.g. Personalization)
+
+Namespace separator: as per target platform
+
+Letter case: as per target platform
+
+**Project name (GH repo name)**
+
+[Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK
+Platform: php, java, swift (not iphone)
+
+Paradigm: Rx (reactive), MVC
+
+E.g. PersonalizationJavaRxSDK
+
+If the project is not hosted under Kentico's organization, the name should contain Kentico Cloud.
+
+**Package names**
+
+<Main namespace><Namespace separator><Sub Namespace>
+  
+  
