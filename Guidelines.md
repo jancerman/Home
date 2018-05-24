@@ -1,6 +1,14 @@
 # Guidelines for the Delivery API TODO
 
 + kratke intro o tom, co sa na tejto page nachadza, dovody za tym.
+Welcome to our Delivery API guidelines page created to help you get all the information about our Delivery API in one place. This page contains all the technical limitations and restrictions of our Delivery API, error formats that we use, naming conventions and more.
+
+The main idea behind this page was to make it easier for you in case you'd like to develop your own SDK using the Delivery API, as ...
+x
+All of this can be a great stepping stone when developing your own SDK while using the Delivery API. These guidelines will guide you through all the requirements needed to create a Delivery API based SDK and also some recommendations to better comply with what we already have and use in out own SDKs.
+
+See also the Content Management API guidelines and its limitations.
+
 
 ## API Limitations
 
@@ -347,4 +355,6 @@ If the project is not hosted under Kentico's organization, the name should conta
 
 <Main namespace><Namespace separator><Sub Namespace>
   
-  
+## Other requirements  
+
++ we have an internal list of requirements that an OS project needs to comply with.
