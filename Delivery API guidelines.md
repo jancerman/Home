@@ -5,9 +5,9 @@ Welcome to our Delivery API guidelines page created to help you get all the info
 
 The main idea behind this page was to make it easier for you in case you'd like to develop your own SDK using the Delivery API, as ...
 x
-All of this can be a great stepping stone when developing your own SDK while using the Delivery API. These guidelines will guide you through all the requirements needed to create a Delivery API based SDK and also some recommendations to better comply with what we already have and use in out own SDKs.
+All of this can be a great stepping stone when developing your own SDK while using the Delivery API. These guidelines will guide you through all the requirements needed to create a Delivery API based SDK and also some recommendations to better comply with what we already have and use in our own SDKs.
 
-See also the Content Management API guidelines and its limitations.
+See also the <add link>Content Management API guidelines and its limitations.
 
 
 ## API Limitations
@@ -55,6 +55,8 @@ In the following table, you can see all of our content type elements, their data
 </tbody>
 </table>
 
+Content item name is limited to 50 chars.
+
 + how about Content type snippet? Taxonomies?
 
 ### Content element limits
@@ -72,6 +74,8 @@ There are a few more limitations that you should keep in mind for the content el
 <tr>
 <td>Guidelines</td><td>string</td><td>limit of 10,000 characters</td>
 </tr>
+</tbody>
+</table>
 
 ### Request limits
 
@@ -81,8 +85,6 @@ All in all, the maximum request length can go up to 2097151 kB (2GB).
 ## API Error codes
 
 In this section, we summed up the possible error codes that you can receive when working with the Delivery API.
-
-Retry policy: Only errors with codes 0 and 2 is sensible to retry. -> explain further?
 
 ### Error format specification
 
@@ -124,14 +126,20 @@ Retry policy: Only errors with codes 0 and 2 is sensible to retry. -> explain fu
 1009: "Ordering by multiple parameters is not allowed."<br>
 1010: "Query parameter '{0}' must have a value between {1} and {2}."<br>
 
+### Retry policy
+
+Retry policy: Only errors with codes 0 and 2 is sensible to retry. -> explain further?
+
 
 ## Returned data
 
 Application/json is returned for every route.
 
++ Types of returned data? Mozno JSON response example?
+
 ### Object model descriptions of the listing responses
 
-In this section, we described the object model descriptions of the listing responses (for content items, content types, and taxonomies) returned by the Delivery API. When you retrieve a list of content items, content types or taxonomy groups from your project, the Delivery API returns a paginated listing response. 
+In this section, we described the object model descriptions of the listing responses (for content items, content types, and taxonomies) returned by the Delivery API. When you retrieve a list of content items, content types or taxonomy groups from your project, the Delivery API returns a paginated listing response.
 
 **Content items listing response**
 
@@ -264,6 +272,8 @@ Empty responses when querying non-existent data -> GET all /items , GET all /typ
 Authorization - authorization of Secured Delivery API
 * X-KC-Wait-For-Loading-New-Content - used usually when fetching fresh content based on a webhook call
 * X-KC-SDKID - used internally/automatically for SDK version tracking
+
++ Add note for the webhooks support!
 
 Webhooks - we add these to every webhook call:
 * X-KC-Message-Id
