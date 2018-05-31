@@ -241,7 +241,158 @@ The response headers are mostly standard or not really useful for the customer (
 
 ### List of required endpoints
 
-+ SDK should cover every endpoind specified in the API ref.
++ SDK should cover every endpoint specified in the API ref.
+
+Content model
+
+<table>
+<tbody>
+<tr>
+  <th><h3>Method</h3></th><th><h3></h3></th><th><h3>Endpoint</h3></th>
+</tr>
+<tr>
+  <td>POST</td><td>Project content</td><td>Validate project content https://developer.kenticocloud.com/v1/reference#content-management-api-validate-project</td>
+</tr>
+<tr>
+  <td>POST</td><td>Content item</td><td>Add a content item https://developer.kenticocloud.com/v1/reference#content-management-api-add-item</td>
+</tr>
+<tr>
+  <td>GET</td><td>Content items</td><td>List content items https://developer.kenticocloud.com/v1/reference#content-management-api-list-items</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Content item by ID</td><td>Update a content item by ID https://developer.kenticocloud.com/v1/reference#content-management-api-item-by-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Content item by ID</td><td>View a content item by ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-item-by-item-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Content item by ID</td><td>Delete a content item by ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-item-by-item-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by ID</td><td>List language variants https://developer.kenticocloud.com/v1/reference#content-management-api-list-variants-by-item-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by ID</td><td>Upsert a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-id-language-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by ID</td><td>Upsert a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-id-language-codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by ID</td><td>View a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-id-language-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by ID</td><td>View a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-id-language-codename</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by ID</td><td>Delete a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-id-language-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by ID</td><td>Delete a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-id-language-codename</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Content item by codename</td><td>Update a content item by codename https://developer.kenticocloud.com/v1/reference#content-management-api-update-item-by-item-codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>Content item by codename</td><td>View a content item by codename https://developer.kenticocloud.com/v1/reference#content-management-api-view-item-by-item-codename</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Content item by codename</td><td>Delete a content item by codename https://developer.kenticocloud.com/v1/reference#content-management-api-delete-item-by-item-codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by codename</td><td>List language variants https://developer.kenticocloud.com/v1/reference#content-management-api-list-variants-by-item-codename</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by codename</td><td>Upsert a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-codename-language-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by codename</td><td>Upsert a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-codename-language-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by codename</td><td>View a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-codename-language-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by codename</td><td>View a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-codename-language-codename</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by codename</td><td>Delete a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-codename-language-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by codename</td><td>Delete a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-codename-language-codename</td>
+</tr>
+
+<tr>
+  <td>PUT</td><td>Content item by external ID</td><td>Upsert a content item by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-item-by-item-external-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Content item by external ID</td><td>View a content item by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-item-by-external-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Content item by external ID</td><td>Delete a content item by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-item-by-item-external-id</td>
+</tr>
+
+<tr>
+  <td>GET</td><td>Language variant by external ID</td><td>List language variants https://developer.kenticocloud.com/v1/reference#content-management-api-list-variants-by-item-external-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by external ID</td><td>Upsert a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-external-id-language-id</td>
+</tr>
+<tr>
+  <td>PUT</td><td>Language variant by external ID</td><td>Upsert a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-variant-by-item-external-id-language-codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by external ID</td><td>View a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-external-id-language-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Language variant by external ID</td><td>View a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-view-variant-by-item-external-id-language-codename</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by external ID</td><td>Delete a variant by language ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-external-id-language-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Language variant by external ID</td><td>Delete a variant by language codename https://developer.kenticocloud.com/v1/reference#content-management-api-delete-variant-by-item-external-id-language-codename</td>
+</tr>
+</tbody>
+</table>
+
+Asset model 
+
+<table>
+<tbody>
+<tr>
+  <th><h3>Method</h3></th><th><h3> </h3></th><th><h3>Endpoint</h3></th>
+</tr>
+<tr>
+  <td>POST</td><td></td><td>Upload a binary file https://developer.kenticocloud.com/v1/reference#content-management-api-upload-file</td>
+</tr>
+<tr>
+  <td>POST</td><td></td><td>Add an asset https://developer.kenticocloud.com/v1/reference#content-management-api-add-asset</td>
+</tr>
+<tr>
+  <td>GET</td><td></td><td>List assets https://developer.kenticocloud.com/v1/reference#content-management-api-list-assets</td>
+</tr>
+    
+<tr>
+  <td>PUT</td><td>Asset by ID</td><td>Update an asset by ID https://developer.kenticocloud.com/v1/reference#content-management-api-list-assets</td>
+</tr>
+<tr>
+  <td>GET</td><td>Asset by ID</td><td>View an asset by ID https://developer.kenticocloud.com/v1/reference#content-management-api-list-assets</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Asset by ID</td><td>Delete an asset by ID https://developer.kenticocloud.com/v1/reference#content-management-api-list-assets</td>
+</tr>
+
+<tr>
+  <td>PUT</td><td>Asset by external ID</td><td>Upsert an asset by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-upsert-asset-by-external-id</td>
+</tr>
+<tr>
+  <td>GET</td><td>Asset by external ID</td><td>View an asset by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-view-asset-by-external-id</td>
+</tr>
+<tr>
+  <td>DELETE</td><td>Asset by external ID</td><td>Delete an asset by external ID https://developer.kenticocloud.com/v1/reference#content-management-api-delete-asset-by-external-id</td>
+</tr>
+
+</tbody>
+</table>
 
 ### External ID usage
 
