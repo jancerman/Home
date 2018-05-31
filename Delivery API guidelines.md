@@ -256,7 +256,7 @@ In this section, we described the object model descriptions of the listing respo
 <td>content module</td><td>object tag with type="application/kenticocloud", data-type="item" and data-item-id</td>
 </tr>
 </tbody>
-<table>
+</table>
 
 ### Empty response vs. 404
 
@@ -317,7 +317,37 @@ The response headers are mostly standard or not really useful for the customer (
 
 + Use our feature matrix as a lead -> to explain what should be covered by the SDK. f.e. https://developer.kenticocloud.com/docs/net
 
-### List of required endpoints:
+### List of required endpoints
+
+<table>
+<tbody>
+<tr>
+  <th><h3>Method</h3></th><th><h3>Endpoint</h3></th>
+</tr>
+<tr>
+  <td>GET</td><td>List content items https://deliver.kenticocloud.com/project_id/items</td>
+</tr>
+<tr>
+  <td>GET</td><td>View a content item https://deliver.kenticocloud.com/project_id/items/content_item_codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>List content types https://deliver.kenticocloud.com/project_id/types</td>
+</tr>
+<tr>
+  <td>GET</td><td>View a content type https://deliver.kenticocloud.com/project_id/types/content_type_codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>View a content type element https://deliver.kenticocloud.com/project_id/types/content_type_codename/elements/element_codename</td>
+</tr>
+<tr>
+  <td>GET</td><td>List taxonomy groups https://deliver.kenticocloud.com/project_id/taxonomies</td>
+</tr>
+<tr>
+  <td>GET</td><td>View a taxonomy group https://deliver.kenticocloud.com/project_id/taxonomies/taxonomy_group_codename
+</td>
+</tr>
+</tbody>
+</table>
 
 GET List content items https://deliver.kenticocloud.com/project_id/items
 GET View a content item https://deliver.kenticocloud.com/project_id/items/content_item_codename
