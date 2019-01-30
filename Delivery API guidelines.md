@@ -1,400 +1,155 @@
-# Guidelines for the Delivery API TODO
+# Guidelines for SDK developers
 
-+ kratke intro o tom, co sa na tejto page nachadza, dovody za tym.
-Welcome to our Delivery API guidelines page created to help you get all the information about our Delivery API in one place. This page contains all the technical limitations and restrictions of our Delivery API, error formats that we use, naming conventions and more.
+Welcome to the Kentico Cloud guidelines for SDK developers! These guidelines cover all the requirements needed to create an SDK for the [Delivery API](https://developer.kenticocloud.com/reference#delivery-api). Also, we've added recommendations on naming conventions to better match naming used in our existing SDKs. This should give you a solid starting point for developing your own SDKs in the framework of your choice.
 
-The main idea behind this page was to make it easier for you in case you'd like to develop your own SDK using the Delivery API, as ...
-x
-All of this can be a great stepping stone when developing your own SDK while using the Delivery API. These guidelines will guide you through all the requirements needed to create a Delivery API based SDK and also some recommendations to better comply with what we already have and use in our own SDKs.
+The guidelines cover the following aspects:
 
-See also the <add link>Content Management API guidelines and its limitations.
+* Expected SDK functionality
+* Format of the returned data
+* Rate limits
+* Errors
+* HTTP headers
 
+## Expected functionality
 
-## API Limitations
+### Supported endpoints
 
-### Rate limits
+The SDK must support retrieving content from the following Delivery API endpoints:
 
-As far as the Delivery API goes, there is no rate limitation. This means we do not specify the number of requests you can make to the Delivery API within a specific time window.
+Method | Endpoint | Title
+---------|----------|---------
+GET | https://deliver.kenticocloud.com/{project_id}/items | List content items
+GET | https://deliver.kenticocloud.com/{project_id}/items/{content_item_codename} | View a content item
+GET | https://deliver.kenticocloud.com/{project_id}/types | List content types
+GET | https://deliver.kenticocloud.com/{project_id}/types/{content_type_codename} | View a content type
+GET | https://deliver.kenticocloud.com/{project_id}/types/{content_type_codename}/elements/{element_codename} | View a content type element 
+GET | https://deliver.kenticocloud.com/{project_id}/taxonomies | List taxonomy groups
+GET | https://deliver.kenticocloud.com/{project_id}/taxonomies/{taxonomy_group_codename} | View a taxonomy group
 
-### Data type limits
+### Supported features
 
-In the following table, you can see all of our content type elements, their data type and the limitations.
+The SDK should also support the following features:
 
-<table>
-<tbody>
-<tr>
-<th><h3>Content type element</h3></th><th><h3>Data type</h3></th><th><h3>(Accepted) Limits</h3></th>
-</tr>
-<tr>
-<td>Text</td><td>string</td><td>hard limit of 100,000 characters</td>
-</tr>
-<tr>
-<td>Rich text</td><td>string</td><td>Hard limit of 100,000 characters. NOTE: We are counting markup and whitespaces as well.</td>
-</tr>
-<tr>
-<td>Multiple choice</td><td>string</td><td>can contain up to 250 predefined options</td>
-</tr>
-<tr>
-<td>Number</td><td>decimal number</td><td>"##########.##########" 10 numbers before and after the decimal separator</td>
-</tr>
-<tr>
-<td>Date & time</td><td>string</td><td>Valid format: YYYY-MM-DDTHH:MM:SSZ. ISO-8601 formatted string.</td>
-</tr>
-<tr>
-<td>Asset</td><td>image</td><td>100 MB</td>
-</tr>
-<tr>
-<td>Modular content</td><td>string</td><td> ? </td>
-</tr>
-<tr>
-<td>URL slug</td><td>string</td><td>limit of 100,000 characters</td>
-</tr>
-<tr>
-<td>Guidelines</td><td>string</td><td>limit of 10,000 characters</td>
-</tr>
-</tbody>
-</table>
+Feature | Explanation
+---------|----------
+Delivery Preview API | Support for [previewing unpublished content items](https://developer.kenticocloud.com/reference#section-production-vs-preview) via the Delivery Preview API.
+Content filtering | Support for the [filtering parameters](https://developer.kenticocloud.com/reference#content-filtering) when making queries to the Delivery API.
+Localization | Support for retrieving localized content, that is using the `language` query parameter when retrieving content items.
+Rendering Rich text elements | Support for rendering content of the built-in Rich text elements. This content includes links, images, components, and other content items.
+Resolving links | Support for resolving hypertext links to other content items within the built-in Rich text elements.
+Retrieving linked items | Support for retrieving content items and components that are used within other content items.
 
-Content item name is limited to 50 chars.
+### Strong vs. weak typing
 
-+ how about Content type snippet? Taxonomies?
+We recommend that you use strong typing for the SDK, if supported by a given stack. Note that the community can implement untyped support later, if needed. In such case, the untyped methods should return raw data from the Delivery API and should not modify the content in any way.
 
-### Content element limits
+For information about content elements and their data types, see [Data types](#data-types) below.
 
-There are a few more limitations that you should keep in mind for the content element itself.
+## Returned data
 
-<table>
-<tbody>
-<tr>
-<th><h3>Element field</h3></th><th><h3>Data type</h3></th><th><h3>Limits</h3></th>
-</tr>
-<tr>
-<td>Label</td><td>string</td><td>limit of 50 characters</td>
-</tr>
-<tr>
-<td>Guidelines</td><td>string</td><td>limit of 10,000 characters</td>
-</tr>
-</tbody>
-</table>
+The Delivery API returns JSON payloads both for successful and [unsuccessful](#errors) requests.
 
-### Request limits
+### Object model descriptions of the returned data
 
-All in all, the maximum request length can go up to 2097151 kB (2GB).
+When you query endpoints for retrieving all `/items`, `/types`, or `/taxonomies`, the Delivery API returns a paginated listing response with content that matches your specific query. In each case, the listing response contains a pagination object with information about the number of retrieved items, a link to the next page of results.
 
+You can find [descriptions and examples of the listing responses](https://developer.kenticocloud.com/reference#listing-response) for content items, content types, and taxonomy groups in our API reference.
 
-## API Error codes
+For details on the structure of the objects returned by the Delivery API, see the these pages in the API reference:
 
-In this section, we summed up the possible error codes that you can receive when working with the Delivery API.
+* [Content item model](https://developer.kenticocloud.com/reference#content-item-object)
+* [Content type model](https://developer.kenticocloud.com/reference#content-type-object)
+* [Taxonomy group model](https://developer.kenticocloud.com/reference#taxonomy-group-object)
 
-### Error format specification
+### Data types
 
-```
+Content element | Data type | Limitation
+--- | --- | ---
+Text | string | Hard limit of 100,000 characters.
+Rich text | string | Hard limit of 100,000 characters. **Note**: The limit includes HTML markup and whitespace characters.
+Multiple choice | string | Can contain up to 250 predefined options.
+Number | decimal number | Numbers have the following format: "##########.##########" 10 numbers before and after the decimal separator
+Date & time | string | Valid format: YYYY-MM-DDTHH:MM:SSZ. ISO-8601 formatted string.
+Asset | image | 100 MB
+Modular content | string | None.
+URL slug | string | Hard limit of 100,000 characters.
+
+You can find [example JSON values for each of the content elements](https://developer.kenticocloud.com/reference#content-type-element-object) in our API reference.
+
+### Empty response vs. 404 error
+
+The Delivery API differentiates between a correct query, which doesn't bring any results and gives a 200 OK response, and a wrong query, which causes a 404 Not found response.
+
+For example, you can get an empty response when querying [endpoints](#supported-endpoints) for `/items`, `/types`, or `/taxonomies`.
+
+### Errors
+
+The Delivery API returns errors in the JSON format. Here's an example of an error message:
+
+```json
 {
-  "message": "Query parameter 'limit' must be a positive integer.", // Clear specification of what happened.
-  "request_id": "GMAQvDLeLbE=", 
-  "error_code": 1005,
+  "message": "No HTTP resource was found that matches the request. Please read API documentation at https://developer.kenticocloud.com.",
+  "request_id": "|38a7b46fc8597a4aa1ab0169449cac54.c37263a1_",
+  "error_code": 1,
   "specific_code": 0
 }
 ```
 
-### General errors
+The `message` property in the error message provides a clear specification of what went wrong when making the request.
 
-0: "Unknown internal server error. Please contact our support."<br>
-1: "No HTTP resource was found that matches the request. Please read API documentation at https://developer.kenticocloud.com ."<br>
-2: null // only error code is used, the rest is filled from the HttpException itself<br>
-3: "Missing or invalid access token. Please include the valid access token value in the Authorization header field as an HTTP bearer authorization scheme."<br>
-4: "Access token does not provide the permissions required for the project."<br>
+You can distinguish between the different error messages by their `error_code` property, if needed. Single digit numbers signify general errors, `1XX` numbers signify errors occurring when a resource was not found, and `1XXX` numbers signify query parser errors.
 
-### Controller errors
+Here are some examples of the general errors:
 
-100: "The requested content item '{0}' was not found."<br>
-101: "The requested content type '{0}' was not found."<br>
-102: "The requested content element '{0}' was not found in content type '{1}'."<br>
-104: "The requested taxonomy group '{0}' was not found."<br>
-
-### Query parser errors
-
-1000: "The RANGE operator expects two parameters. {0} provided."<br>
-1001: "Parameter 'elements' has to contain only names of elements, not its fields. Incorrect parameter name was '{0}'."<br>
-1002: "Operator '{0}' was not recognized as a valid operator."<br>
-1003: "Query parameter '{0}' must be specified only once."<br>
-1004: "Parameter '{0}' is a reserved parameter and we didn't recognize the syntax. If you meant to access the element called '{0}', you need to prefix it with 'elements.'."<br>
-1005: "Query parameter '{0}' must be a positive integer."<br>
-1006: "Query parameter '{0}' must be a positive integer number or zero."<br>
-1007: "You tried to use '{0}' in order parameter. The only valid values are 'ASC' and 'DESC'."<br>
-1008: "It is not allowed to order by '{0}'. You can order by system properties or elements only. Elements must be prefixed with 'elements.'."<br>
-1009: "Ordering by multiple parameters is not allowed."<br>
-1010: "Query parameter '{0}' must have a value between {1} and {2}."<br>
-
-### Retry policy
-
-Retry policy: Only errors with codes 0 and 2 is sensible to retry. -> explain further?
-
-
-## Returned data
-
-Application/json is returned for every route.
-
-+ Types of returned data? Mozno JSON response example?
-
-### Object model descriptions of the listing responses
-
-In this section, we described the object model descriptions of the listing responses (for content items, content types, and taxonomies) returned by the Delivery API. When you retrieve a list of content items, content types or taxonomy groups from your project, the Delivery API returns a paginated listing response.
-
-**Content items listing response**
-
-<table>
-<tbody>
-<tr>
-<th><h3>Attribute</h3></th><th><h3>Description</h3></th><th><h3>Type</h3></th>
-</tr>
-<tr>
-<td>items</td><td>A list of content items</td><td>array of Content item objects</td>
-</tr>
-<tr>
-<td>modular_content</td><td>A list of content items used in Modular content and Rich text elements</td><td>collection of Content item objects</td>
-</tr>
-<tr>
-<td>pagination</td><td>Information about the retrieved page</td><td>Pagination</td>
-</tr>
-</tbody>
-<table>
-
-**Content types listing response**
-
-<table>
-<tbody>
-<tr>
-<th><h3>Attribute</h3></th><th><h3>Description</h3></th><th><h3>Type</h3></th>
-</tr>
-<tr>
-<td>types</td><td>A list of content types</td><td>array of Content type objects</td>
-</tr>
-<tr>
-<td>pagination</td><td>Information about the retrieved page</td><td>Pagination</td>
-</tr>
-</tbody>
-<table>
-
-**Taxonomy listing response**
-
-<table>
-<tbody>
-<tr>
-<th><h3>Attribute</h3></th><th><h3>Description</h3></th><th><h3>Type</h3></th>
-</tr>
-<tr>
-<td>taxonomies</td><td>A list of taxonomy groups</td><td>array of Taxonomy group objects</td>
-</tr>
-<tr>
-<td>pagination</td><td>Information about the retrieved page</td><td>Pagination</td>
-</tr>
-</tbody>
-<table>
-
-**Pagination object**
-
-<table>
-<tbody>
-<tr>
-<th><h3>Attribute</h3></th><th><h3>Description</h3></th><th><h3>Type</h3></th><th><h3>Notes</h3></th>
-</tr>
-<tr>
-<td>skip</td><td>Number of content items skipped from the response</td><td>integer</td><td>Reflects the value set by the skip query parameter.</td>
-</tr>
-<tr>
-<td>limit</td><td>Number of content items returned in the response</td><td>integer</td><td>Reflects the value set by the limit query parameter.</td>
-</tr>
-<tr>
-<td>count</td><td>Number of retrieved content items</td><td>integer</td><td>If the limit and skip query parameters aren't set, the count attribute will contain the total number of content items matching the specified filtering parameters.</td>
-</tr>
-<tr>
-<td>next_page</td><td>URL to the next page of results</td><td>string</td><td>...</td>
-</tr>
-</tbody>
-<table>
-
-+ data types are already described in the "Data type limits" table, should I still explicitely mention this?
-
-
-### Modular content in the response
-
-+ supported levels of nesting ?
-
-<table>
-<tbody>
-<tr>
-<th><h3>Element</h3></th><th><h3>Supported tags</h3></th>
-</tr>
-<tr>
-<td>headings</td><td>h1, h2, h3, h4</td>
-</tr>
-<tr>
-<td>text</td><td>p, strong, em</td>
-</tr>
-<tr>
-<td>ordered list</td><td>ol, li</td>
-</tr>
-<tr>
-<td>unordered list</td><td>ul, uli</td>
-</tr>
-<tr>
-<td>table</td><td>table, tbody, tr, td</td>
-</tr>
-<tr>
-<td>web links</td><td>a tag with href</td>
-</tr>
-<tr>
-<td>content item link</td><td>a tag with data-item-id</td>
-</tr>
-<tr>
-<td>asset link</td><td>a tag with data-asset-id</td>
-</tr><tr>
-<td>inline image</td><td>figure tag with data-asset-id and image tag</td>
-</tr>
-<tr>
-<td>content module</td><td>object tag with type="application/kenticocloud", data-type="item" and data-item-id</td>
-</tr>
-</tbody>
-</table>
-
-### Empty response vs. 404
-
-We differentiate between the correct query which doesn't bring any results and returns 200 error code and the wrong query which causes a 404 error. 
-
-Empty responses when querying non-existent data -> GET all /items , GET all /types, GET all /taxonomies endpoints.
-
+* `0`: "Unknown internal server error. Please contact our support."
+* `1`: "No HTTP resource was found that matches the request. Please read API documentation at https://developer.kenticocloud.com."
+* `2`: null
+* `3`: "Missing or invalid access token. Please include the valid access token value in the Authorization header field as an HTTP bearer authorization scheme."
+* `4`: "Access token does not provide the permissions required for the project."
 
 ## HTTP headers
 
-### Request headers
+### Analytics
 
-Authorization - authorization of Secured Delivery API
-* X-KC-Wait-For-Loading-New-Content - used usually when fetching fresh content based on a webhook call
-* X-KC-SDKID - used internally/automatically for SDK version tracking
+We strongly recommend that the SDK sends a `X-KC-SDKID` header with each request to the API. The value of the header should be formatted like this `<SDK package origin>;<SDK name>;<SDK version>`. For example, for the version 9 of the [Delivery .NET SDK](https://github.com/Kentico/delivery-sdk-net), the header value would be `nuget.org;KenticoCloud.Delivery;9.0.0`.
 
-+ Add note for the webhooks support!
+### Requesting latest content
 
-Webhooks - we add these to every webhook call:
-* X-KC-Message-Id
-* X-KC-Message-Type
-* X-KC-Message-Operation
-* X-KC-Message-Api-Name
-* X-KC-Message-Project-Id
-* X-KC-Message-Webhook-Url
-* X-KC-Message-Created-Timestamp
+By default, the Delivery API serves old content (if cached by the Fastly CDN) while it's fetching the new content to minimize wait time. In some cases, such as [reacting to webhook notifications](https://developer.kenticocloud.com/docs/webhooks), you might want to explicitly request the latest content from Kentico Cloud.
 
-### Response headers
+To do this within your SDK, include the `X-KC-Wait-For-Loading-New-Content` header and set it to `true` when sending requests to the API.
 
-The response headers are mostly standard or not really useful for the customer (the exception may be X-Cache and X-Cache-Hits).
+Including the header will cause the Delivery API to wait while fetching new content.
 
-**Standard**
-* Accept-Ranges
-* Access-Control-Allow-Origin
-* Age
-* Connection
-* Content-Encoding
-* Content-Length
-* Content-Type
-* Date
-* Expires
-* Pragma
-* Request-Context
-* Server
-* Vary
-* Via
+## API limits
 
-**Proprietary**
-* X-AspNet-Version
-* X-Cache - possible values: MISS, HIT - indicates if the response comes from Fastly cache
-* X-Cache-Hits - integer - indicates how many times the response came from Fastly cache so far
-* X-Powered-By
-* X-Served-By
-* X-Timer
+### Rate limitation
 
+There is no rate limitation for the Delivery API. This means that we don't specify any maximum number of requests you can make to the API within a specific time window.
 
-## Expected functionality
+### URL length
 
-+ Use our feature matrix as a lead -> to explain what should be covered by the SDK. f.e. https://developer.kenticocloud.com/docs/net
+The length of URLs for the GET requests is limited to 2048 characters. The Delivery API returns an [error](#errors) for URLs longer than 2048 characters.
 
-### List of required endpoints
+### Request length
 
-<table>
-<tbody>
-<tr>
-  <th><h3>Method</h3></th><th><h3>Endpoint</h3></th>
-</tr>
-<tr>
-  <td>GET</td><td>List content items https://deliver.kenticocloud.com/project_id/items</td>
-</tr>
-<tr>
-  <td>GET</td><td>View a content item https://deliver.kenticocloud.com/project_id/items/content_item_codename</td>
-</tr>
-<tr>
-  <td>GET</td><td>List content types https://deliver.kenticocloud.com/project_id/types</td>
-</tr>
-<tr>
-  <td>GET</td><td>View a content type https://deliver.kenticocloud.com/project_id/types/content_type_codename</td>
-</tr>
-<tr>
-  <td>GET</td><td>View a content type element https://deliver.kenticocloud.com/project_id/types/content_type_codename/elements/element_codename</td>
-</tr>
-<tr>
-  <td>GET</td><td>List taxonomy groups https://deliver.kenticocloud.com/project_id/taxonomies</td>
-</tr>
-<tr>
-  <td>GET</td><td>View a taxonomy group https://deliver.kenticocloud.com/project_id/taxonomies/taxonomy_group_codename
-</td>
-</tr>
-</tbody>
-</table>
-
-GET List content items https://deliver.kenticocloud.com/project_id/items
-GET View a content item https://deliver.kenticocloud.com/project_id/items/content_item_codename
-GET List content types https://deliver.kenticocloud.com/project_id/types
-GET View a content type https://deliver.kenticocloud.com/project_id/types/content_type_codename
-GET View a content type element https://deliver.kenticocloud.com/project_id/types/content_type_codename/elements/element_codename
-GET List taxonomy groups https://deliver.kenticocloud.com/project_id/taxonomies
-GET View a taxonomy group https://deliver.kenticocloud.com/project_id/taxonomies/taxonomy_group_codename
-
-### Strong vs. weak typing
-
-If supported by a given stack, prefer strong typing (community can implement untyped support, if required)
-If implemented, untyped methods should return raw data (=> should not modify content...e.g. don't resolve links)
-
-+  suggestions how to use ExternalID with upsert to allow repeatable imports  
-+ continuationToken usage
-+ non-updatable props (Codename, LastModified, ExternalID, Item.Type, Variant.Language...) - updates are not leading to error but values are simply ignored
-+ RichText forma
-
+The length of a GET request to the Delivery API is not limit. Technically, the requests may be up to 2097151 kB (2 GB) long.
 
 ## Naming conventions
 
-**Namespaces**
+This parts contains recommended naming conventions for the project name, the namespaces in your project, and package names.
 
-Main namespace: Kentico Cloud
+### Namespaces
 
-Sub namespace: Name of the endpoint (e.g. Personalization)
+* Main namespace: Kentico Cloud
+* Sub namespace: Name of the API (e.g., Delivery)
+* Namespace separator: as per target platform
+* Letter case: as per target platform
 
-Namespace separator: as per target platform
+### Project name (GitHub repo name)
 
-Letter case: as per target platform
+We recommend that the project for your SDK uses the following naming pattern: [Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK. For example, for the Delivery .NET SDK, the project name would be Kentico Cloud Delivery .NET SDK.
 
-**Project name (GH repo name)**
+## Other requirements
 
-[Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK
-Platform: php, java, swift (not iphone)
-
-Paradigm: Rx (reactive), MVC
-
-E.g. PersonalizationJavaRxSDK
-
-If the project is not hosted under Kentico's organization, the name should contain Kentico Cloud.
-
-**Package names**
-
-<Main namespace><Namespace separator><Sub Namespace>
-  
-## Other requirements  
-
-+ we have an internal list of requirements that an OS project needs to comply with.
+For your SDK to be included within the list Kentico Cloud SDKs, the SDK project has to comply with our checklist for [Publishing an OS project].
