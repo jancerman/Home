@@ -7,8 +7,8 @@ The guidelines cover the following topics:
 * [Expected SDK functionality](#expected-functionality)
 * [Ensuring backward compatibility](#ensuring-backward-compatibility)
 * [Format of the returned data](#returned-data)
-* [HTTP headers](#http-headers)
-* [Delivery API limits](#api-limits)
+* [Sending HTTP headers](#sending-http-headers)
+* [Delivery API limits](#delivery-api-limits)
 * [Naming conventions](#naming-conventions)
 * [OS project requirements](#os-project-requirements)
 
@@ -176,7 +176,7 @@ Here are some recommendations on naming conventions for the SDK project name, th
 
 ### Project name (GitHub repo name)
 
-We recommend that the project for your SDK uses the following naming pattern: `[Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK`. For example, for the Delivery .NET SDK, the project name would be Kentico Cloud Delivery .NET SDK.
+We recommend that the project for your SDK uses the following naming pattern: `[Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK`. For example, for the Delivery .NET SDK, the project name would be _Kentico Cloud Delivery .NET SDK_.
 
 ## OS project requirements
 
