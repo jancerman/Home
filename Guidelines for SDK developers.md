@@ -1,15 +1,16 @@
 # Guidelines for SDK developers
 
-Welcome to the Kentico Cloud guidelines for SDK developers! These guidelines cover all the requirements needed to create SDKs for the [Kentico Cloud Delivery API](https://developer.kenticocloud.com/reference#delivery-api). This should give you a solid starting point for developing your own SDKs in the framework of your choice.
+Welcome to the Kentico Cloud guidelines for SDK developers! These guidelines cover all the requirements needed to create SDKs for the [Kentico Cloud Delivery API](https://developer.kenticocloud.com/reference#delivery-api) and should give you a solid starting point for developing SDKs in the framework of your choice.
 
 The guidelines cover the following topics:
 
 * [Expected SDK functionality](#expected-functionality)
+* [Ensuring backward compatibility](#ensuring-backward-compatibility)
 * [Format of the returned data](#returned-data)
 * [HTTP headers](#http-headers)
 * [Delivery API limits](#api-limits)
 * [Naming conventions](#naming-conventions)
-* [OS project requirements](#other-requirements)
+* [OS project requirements](#os-project-requirements)
 
 ## Expected functionality
 
@@ -44,7 +45,37 @@ Retrieving linked items | Support for retrieving content items and components th
 
 We recommend that you use strong typing for the SDK, if supported by a given stack. Note that the community can implement untyped support later, if needed. In such case, the untyped methods should return raw data from the Delivery API and should not modify the content in any way.
 
-For information about content elements and their data types, see [Data types](#data-types) below.
+For information about content elements and their data types, see [Content element data types](#content-element-data-types) below.
+
+## Ensuring backward compatibility
+
+The Delivery API evolves in a way that is backward compatible. This means that, as long as you follow a few rules, changes in the Delivery API should not break client applications. Even when the API changes, you can ensure that applications using your SDK still work correctly with the current API version.
+
+The following changes to the Delivery API are **NOT** considered breaking changes and you should ignore them in your SDK.
+
+* Add a new property to JSON objects.
+* Change the order of JSON object properties (with exceptions, see below).
+* Add a new type of content element.
+* Add a new HTML element to the Rich text elements.
+* Add a new attribute to HTML element in the Rich text elements.
+* Add a new value to HTML element attribute in the Rich text elements.
+* Change the order of HTML element attributes in the Rich text elements.
+* Represent some characters as HTML entities.
+
+**Note**: If a breaking change should happen, we will provide a new version of the Delivery API (alongside the current version of the API) together with new SDK guidelines. We will let you know in time before this happens.
+
+You can always rely on the following rules:
+
+* Elements in content types are in the same order as in Kentico Cloud UI.
+* Elements in content item variants are in the same order as in content types.
+* Options in Multiple choice elements in content types are in the same order as in Kentico Cloud UI.
+* Selected options in Multiple choice elements in content item variants are in the same order as in content types.
+
+To make your SDK more robust, we recommend also applying these guidelines:
+
+* Ignore unknown content elements.
+* Parse HTML with HTML 5 parses. If possible, do not use regular expressions.
+* Ignore unknown HTML elements – keep their content, but ignore their opening and closing tags.
 
 ## Returned data
 
@@ -62,7 +93,7 @@ For details on the structure of the individual objects returned by the Delivery 
 * [Content type model](https://developer.kenticocloud.com/reference#content-type-object)
 * [Taxonomy group model](https://developer.kenticocloud.com/reference#taxonomy-group-object)
 
-### Data types
+### Content element data types
 
 Content element | Data type | Limitation
 --- | --- | ---
@@ -70,8 +101,8 @@ Text | string | Hard limit of 100,000 characters.
 Rich text | string | Hard limit of 100,000 characters. **Note**: The limit includes HTML markup and whitespace characters.
 Multiple choice | string | Can contain up to 250 predefined options.
 Number | decimal number | Numbers have the following format: "##########.##########" 10 numbers before and after the decimal separator
-Date & time | string | Valid format: YYYY-MM-DDTHH:MM:SSZ. ISO-8601 formatted string.
-Asset | image | No limitation.
+Date & time | string | Valid format: YYYY-MM-DDTHH:MM:SSZ. [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) formatted string.
+Asset | binary | No limitation.
 Modular content | string | No limitation.
 URL slug | string | Hard limit of 100,000 characters.
 
@@ -108,7 +139,7 @@ Here are some examples of the general errors:
 * `3`: "Missing or invalid access token. Please include the valid access token value in the Authorization header field as an HTTP bearer authorization scheme."
 * `4`: "Access token does not provide the permissions required for the project."
 
-## HTTP headers
+## Sending HTTP headers
 
 ### Analytics
 
@@ -122,7 +153,7 @@ To do this within your SDK, include the `X-KC-Wait-For-Loading-New-Content` head
 
 Including the header will cause the Delivery API to wait while fetching new content.
 
-## API limits
+## Delivery API limits
 
 ### Rate limitation
 
@@ -132,13 +163,9 @@ There is no rate limitation for the Delivery API. This means that we don't speci
 
 The length of URLs for the GET requests is limited to 2048 characters. The Delivery API returns an [error](#errors) for URLs longer than 2048 characters.
 
-### Request length
-
-The length of a GET request to the Delivery API is not limit. Technically, the requests may be up to 2097151 kB (2 GB) long.
-
 ## Naming conventions
 
-This parts contains recommended naming conventions for the project name, the namespaces in your project, and package names.
+Here are some recommendations on naming conventions for the SDK project name, the namespaces in your project, and package names. Following these recommendations will help others find the SDK more easily.
 
 ### Namespaces
 
@@ -149,7 +176,7 @@ This parts contains recommended naming conventions for the project name, the nam
 
 ### Project name (GitHub repo name)
 
-We recommend that the project for your SDK uses the following naming pattern: [Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK. For example, for the Delivery .NET SDK, the project name would be Kentico Cloud Delivery .NET SDK.
+We recommend that the project for your SDK uses the following naming pattern: `[Main namespace] <Sub Namespace> <Platform> [Paradigm] SDK`. For example, for the Delivery .NET SDK, the project name would be Kentico Cloud Delivery .NET SDK.
 
 ## OS project requirements
 
