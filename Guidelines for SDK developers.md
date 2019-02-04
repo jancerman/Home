@@ -16,17 +16,17 @@ The guidelines cover the following topics:
 
 ### Required endpoints
 
-The SDK must support retrieving content from the following Delivery API endpoints:
+The SDK must support the following Delivery API endpoints:
 
 Method | Endpoint
 ---------|----------
-GET | List content items <br/> `https://deliver.kenticocloud.com/{project_id}/items`
-GET | View a content item <br/> `https://deliver.kenticocloud.com/{project_id}/items/{item_codename}`
-GET | List content types <br/> `https://deliver.kenticocloud.com/{project_id}/types`
-GET | View a content type <br/> `https://deliver.kenticocloud.com/{project_id}/types/{type_codename}`
-GET | View a content type element <br/> `https://deliver.kenticocloud.com/{project_id}/types/{type_codename}/elements/{element_codename}`
-GET | List taxonomy groups <br/> `https://deliver.kenticocloud.com/{project_id}/taxonomies`
-GET | View a taxonomy group <br/> `https://deliver.kenticocloud.com/{project_id}/taxonomies/{taxonomy_group_codename}`
+GET | Retrieve a list content items <br/> `https://deliver.kenticocloud.com/{project_id}/items`
+GET | Retrieve a content item <br/> `https://deliver.kenticocloud.com/{project_id}/items/{item_codename}`
+GET | Retrieve a list of content types <br/> `https://deliver.kenticocloud.com/{project_id}/types`
+GET | Retrieve a content type <br/> `https://deliver.kenticocloud.com/{project_id}/types/{type_codename}`
+GET | Retrieve a content type element <br/> `https://deliver.kenticocloud.com/{project_id}/types/{type_codename}/elements/{element_codename}`
+GET | Retrieve a list of taxonomy groups <br/> `https://deliver.kenticocloud.com/{project_id}/taxonomies`
+GET | Retrieve a taxonomy group <br/> `https://deliver.kenticocloud.com/{project_id}/taxonomies/{taxonomy_group_codename}`
 
 ### Feature support
 
@@ -37,11 +37,11 @@ Feature | Description
 Delivery Preview API | Support for [previewing unpublished content items](https://developer.kenticocloud.com/reference#section-production-vs-preview) via the Delivery Preview API.
 Content filtering | Support for the [filtering parameters](https://developer.kenticocloud.com/reference#content-filtering) when making queries to the Delivery API.
 Localization | Support for retrieving localized content, that is using the `language` query parameter when retrieving content items.
-Rendering Rich text elements | Support for rendering content of the built-in Rich text elements. This content includes links, images, components, and other content items.
+Rendering Rich text elements | Support for rendering content (in other words, transforming HTML 5 fragments) of the built-in Rich text elements. This content includes links, images, components, and other content items.
 Resolving links | Support for resolving hypertext links to other content items within the built-in Rich text elements.
 Retrieving linked items | Support for retrieving content items and components that are used within other content items.
 
-### Strong vs. weak typing
+### Dynamic vs. strongly typed models
 
 We recommend that you use strong typing for the SDK, if supported by a given stack. Note that the community can implement untyped support later, if needed. In such case, the untyped methods should return raw data from the Delivery API and should not modify the content in any way.
 
@@ -49,9 +49,9 @@ For information about content elements and their data types, see [Content elemen
 
 ## Ensuring backward compatibility
 
-The Delivery API evolves in a way that is backward compatible. This means that, as long as you follow a few rules, changes in the Delivery API should not break client applications. Even when the API changes, you can ensure that applications using your SDK still work correctly with the current API version.
+The Delivery API evolves in a way that is backward compatible. This means that, as long as applications follow a few rules, changes in the Delivery API won't break them.
 
-The following changes to the Delivery API are **NOT** considered breaking changes and you should ignore them in your SDK.
+The following changes to the Delivery API are **NOT** considered breaking changes and you should cope with them in your SDK.
 
 * Add a new property to JSON objects.
 * Change the order of JSON object properties (with exceptions, see below).
@@ -64,14 +64,14 @@ The following changes to the Delivery API are **NOT** considered breaking change
 
 **Note**: If a breaking change should happen, we will provide a new version of the Delivery API (alongside the current version of the API) together with new SDK guidelines. We will let you know in time before this happens.
 
-You can always rely on the following rules:
+You can always rely on the following features:
 
 * Elements in content types are in the same order as in Kentico Cloud UI.
 * Elements in content item variants are in the same order as in content types.
 * Options in Multiple choice elements in content types are in the same order as in Kentico Cloud UI.
 * Selected options in Multiple choice elements in content item variants are in the same order as in content types.
 
-To make your SDK more robust, we recommend also applying these guidelines:
+Here are a few tips to help you deal with backward-compatible changes in the Delivery API:
 
 * Ignore unknown content elements.
 * Parse HTML with HTML 5 parses. If possible, do not use regular expressions.
@@ -100,11 +100,12 @@ Content element | Data type | Limitation
 Text | string | Hard limit of 100,000 characters.
 Rich text | string | Hard limit of 100,000 characters. **Note**: The limit includes HTML markup and whitespace characters.
 Multiple choice | string | Can contain up to 250 predefined options.
-Number | decimal number | Numbers have the following format: "##########.##########" 10 numbers before and after the decimal separator
+Number | decimal number | Numbers have the following format: "##########.##########" – 10 numbers before and after the decimal separator.
 Date & time | string | Valid format: YYYY-MM-DDTHH:MM:SSZ. [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) formatted string.
 Asset | binary | No limitation.
 Modular content | string | No limitation.
 URL slug | string | Hard limit of 100,000 characters.
+Custom element | any | No limitation.
 
 You can find [example JSON values for each of the content elements](https://developer.kenticocloud.com/reference#content-type-element-object) in our API reference.
 
@@ -129,8 +130,6 @@ The Delivery API returns errors in the JSON format. Every error message has the 
 
 The `message` property in the error message provides a clear specification of what went wrong when making the request.
 
-You can distinguish between the different error messages by their `error_code` property, if needed. Single digit numbers signify general errors, `1XX` numbers signify errors occurring when a resource was not found, and `1XXX` numbers signify query parser errors.
-
 Here are some examples of the general errors:
 
 * `0`: "Unknown internal server error. Please contact our support."
@@ -143,7 +142,9 @@ Here are some examples of the general errors:
 
 ### Analytics
 
-We strongly recommend that the SDK sends a `X-KC-SDKID` header with each request to the API. The value of the header should be formatted like this `<SDK package origin>;<SDK name>;<SDK version>`. For example, for the version 9 of the [Delivery .NET SDK](https://github.com/Kentico/delivery-sdk-net), the header value would be `nuget.org;KenticoCloud.Delivery;9.0.0`.
+To gauge how much your SDK is used, we strongly recommend that the SDK sends a `X-KC-SDKID` header with each request to the API. The value of the header should be formatted like this `<SDK package origin>;<SDK name>;<SDK version>`, for example, `nuget.org;KenticoCloud.Delivery;9.0.0` for version 9 of the [Delivery .NET SDK](https://github.com/Kentico/delivery-sdk-net).
+
+This way we can identify the requests coming from your SDK and later provide you with information about its usage.
 
 ### Requesting latest content
 
