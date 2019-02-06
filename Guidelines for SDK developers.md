@@ -105,7 +105,7 @@ Date & time | string | Valid format: YYYY-MM-DDTHH:MM:SSZ. [ISO-8601](https://en
 Asset | binary | No limitation.
 Modular content | string | No limitation.
 URL slug | string | Hard limit of 100,000 characters.
-Custom element | any | No limitation.
+Custom element | string | Hard limit of 100,000 characters. **Note**: Custom elements behave as simple text-based elements.
 
 You can find [example JSON values for each of the content elements](https://developer.kenticocloud.com/reference#content-type-element-object) in our API reference.
 
